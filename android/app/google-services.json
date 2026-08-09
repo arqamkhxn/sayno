@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "568807803174",
+    "project_id": "sayno-6bbdd",
+    "storage_bucket": "sayno-6bbdd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568807803174:android:9893c8d37631eac45cd9e7",
+        "android_client_info": {
+          "package_name": "com.sayno.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "568807803174-8h9bvmdunv7kh1aq5v6rmu3gu5rrf5mr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sayno.app",
+            "certificate_hash": "c596b0ae883af1fb9ded53264780d9516c73ec07"
+          }
+        },
+        {
+          "client_id": "568807803174-tipgd53uvvipm7bi0vef6o6q879ocj48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBumR7R303dl4Jym9RUemph7kta7llY4Eg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "568807803174-tipgd53uvvipm7bi0vef6o6q879ocj48.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "568807803174-52dnaj3ml7rcncsj4tfdhh9vd5hideqm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sayno"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

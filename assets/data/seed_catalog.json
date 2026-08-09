@@ -1,0 +1,74 @@
+[
+  {
+    "id": "c_learning_1",
+    "title": "Continue Learning",
+    "subtitle": "Jump back in",
+    "type": "continueLearning",
+    "items": [
+      {
+        "id": "item_1",
+        "title": "Introduction to Microeconomics",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1541872526868-809635f608eb?q=80&w=600&auto=format&fit=crop",
+        "provider": "youtube",
+        "providerId": "jNQXAC9IVRw",
+        "durationSeconds": 900,
+        "difficulty": "Beginner",
+        "estimatedTime": "15 Min Watch",
+        "collectionName": "Commerce Fundamentals",
+        "tags": ["Commerce", "Academics"]
+      }
+    ]
+  },
+  {
+    "id": "c_curated_1",
+    "title": "Build Your Startup",
+    "subtitle": "Essential lessons for founders",
+    "type": "curated",
+    "items": [
+      {
+        "id": "item_2",
+        "title": "How to validate your startup idea",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=600&auto=format&fit=crop",
+        "provider": "youtube",
+        "providerId": "dQw4w9WgXcQ",
+        "durationSeconds": 1200,
+        "difficulty": "Intermediate",
+        "estimatedTime": "20 Min Watch",
+        "collectionName": "Build Your Startup",
+        "tags": ["Build Startup", "Entrepreneurship"]
+      },
+      {
+        "id": "item_3",
+        "title": "Finding product-market fit",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=600&auto=format&fit=crop",
+        "provider": "youtube",
+        "providerId": "M7FIvfx5J10",
+        "durationSeconds": 2400,
+        "difficulty": "Advanced",
+        "estimatedTime": "40 Min Watch",
+        "collectionName": "Build Your Startup",
+        "tags": ["Build Startup"]
+      }
+    ]
+  },
+  {
+    "id": "c_featured_1",
+    "title": "Marketing Fundamentals",
+    "subtitle": "Reach your first 1,000 customers",
+    "type": "featured",
+    "items": [
+      {
+        "id": "item_4",
+        "title": "Zero to One in Marketing",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1533750516457-a7f992034fec?q=80&w=600&auto=format&fit=crop",
+        "provider": "youtube",
+        "providerId": "aqz-KE-bpKQ",
+        "durationSeconds": 1800,
+        "difficulty": "Beginner",
+        "estimatedTime": "30 Min Watch",
+        "collectionName": "Marketing Fundamentals",
+        "tags": ["Marketing"]
+      }
+    ]
+  }
+]

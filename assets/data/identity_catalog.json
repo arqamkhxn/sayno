@@ -1,0 +1,44 @@
+[
+  {
+    "id": "student",
+    "label": "Student",
+    "description": "Focused on academics and learning.",
+    "defaultGoals": ["Academics", "Exams", "Assignments", "Skill Building", "Extracurriculars"],
+    "iconName": "school"
+  },
+  {
+    "id": "entrepreneur",
+    "label": "Entrepreneur",
+    "description": "Building businesses and solving problems.",
+    "defaultGoals": ["Build Startup", "Marketing", "Sales", "Networking", "Product Development"],
+    "iconName": "business_center"
+  },
+  {
+    "id": "developer",
+    "label": "Developer",
+    "description": "Writing code and building software.",
+    "defaultGoals": ["Open Source", "Algorithms", "Side Projects", "Learning new Frameworks"],
+    "iconName": "code"
+  },
+  {
+    "id": "creator",
+    "label": "Creator",
+    "description": "Making content and building an audience.",
+    "defaultGoals": ["YouTube", "Writing", "Design", "Podcasting", "Social Media"],
+    "iconName": "brush"
+  },
+  {
+    "id": "athlete",
+    "label": "Athlete",
+    "description": "Training and competing in sports.",
+    "defaultGoals": ["Training", "Nutrition", "Recovery", "Competition", "Endurance"],
+    "iconName": "fitness_center"
+  },
+  {
+    "id": "job_seeker",
+    "label": "Job Seeker",
+    "description": "Looking for the next career opportunity.",
+    "defaultGoals": ["Applications", "Interviews", "Networking", "Portfolio", "Resume Building"],
+    "iconName": "work"
+  }
+]

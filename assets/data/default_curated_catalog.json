@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "identities": [
+    {
+      "id": "entrepreneur",
+      "label": "Entrepreneur",
+      "description": "Building businesses, marketing, and leadership."
+    },
+    {
+      "id": "student",
+      "label": "Student",
+      "description": "Learning, studying techniques, and personal growth."
+    },
+    {
+      "id": "athlete",
+      "label": "Athlete",
+      "description": "Physical training, sports science, and mental toughness."
+    },
+    {
+      "id": "writer",
+      "label": "Writer",
+      "description": "Creative writing, storytelling, and publishing."
+    },
+    {
+      "id": "designer",
+      "label": "Designer",
+      "description": "Visual design, UX/UI, and creative inspiration."
+    }
+  ],
+  "content": [
+    {
+      "id": "ent_1",
+      "title": "Navigating the Startup Journey",
+      "source_id": "p0yA7r9lZJ0",
+      "provider": "youtube",
+      "duration_seconds": 600,
+      "identity_tags": ["entrepreneur"]
+    },
+    {
+      "id": "stu_1",
+      "title": "Evidence-based Study Techniques",
+      "source_id": "p0yA7r9lZJ0",
+      "provider": "youtube",
+      "duration_seconds": 450,
+      "identity_tags": ["student"]
+    },
+    {
+      "id": "ath_1",
+      "title": "The Science of Recovery",
+      "source_id": "p0yA7r9lZJ0",
+      "provider": "youtube",
+      "duration_seconds": 720,
+      "identity_tags": ["athlete"]
+    },
+    {
+      "id": "wrt_1",
+      "title": "Building a Writing Habit",
+      "source_id": "p0yA7r9lZJ0",
+      "provider": "youtube",
+      "duration_seconds": 300,
+      "identity_tags": ["writer"]
+    },
+    {
+      "id": "dsn_1",
+      "title": "Principles of Visual Hierarchy",
+      "source_id": "p0yA7r9lZJ0",
+      "provider": "youtube",
+      "duration_seconds": 540,
+      "identity_tags": ["designer"]
+    }
+  ]
+}
