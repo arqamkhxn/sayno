@@ -15,6 +15,7 @@ import '../../../core/constants/app_strings.dart';
 import '../../../shared/widgets/sayno_button.dart';
 import '../../../shared/widgets/sayno_scaffold.dart';
 import '../../protection/application/protection_controller.dart';
+import '../../protection/application/limit_controller.dart';
 import '../../protection/domain/protection_status.dart';
 import 'widgets/settings_section.dart';
 import 'widgets/settings_tile.dart';
@@ -60,6 +61,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final releaseState = ref.watch(releaseControllerProvider);
     final partnerState = ref.watch(partnerControllerProvider);
     final authState = ref.watch(authStateProvider).value;
+    
+    final appLimitsAsync = ref.watch(appLimitsProvider);
+    final appLimits = appLimitsAsync.value ?? const {};
 
     final partnerSubtitle = partnerState.partnership == null
         ? 'Not configured'
@@ -120,9 +124,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               ],
               SettingsTile(
                 title: AppStrings.blockedApps,
-                subtitle: '3 apps restricted',
+                subtitle: '${appLimits.length} apps restricted',
                 leading: Icons.apps_rounded,
-                onTap: () {},
+                onTap: () => context.push('/settings/blocked-apps'),
               ),
               SettingsTile(
                 title: AppStrings.usageLimits,

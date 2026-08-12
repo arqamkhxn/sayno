@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../features/coach/presentation/coach_screen.dart';
 import '../features/contract/application/contract_controller.dart';
-import '../features/contract/domain/contract.dart';
 import '../features/contract/presentation/contract_calendar_screen.dart';
 import '../features/contract/presentation/contract_completion_screen.dart';
 import '../features/contract/presentation/contract_create_screen.dart';
@@ -13,6 +11,7 @@ import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/health/presentation/health_screen.dart';
 import '../features/protection/application/session_controller.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/settings/presentation/blocked_apps_screen.dart';
 import '../features/settings/presentation/release_cooldown_screen.dart';
 import '../features/settings/presentation/partner_setup_screen.dart';
 import '../features/settings/presentation/verification_error_screen.dart';
@@ -155,6 +154,12 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: '/settings',
                 builder: (context, state) => const SettingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'blocked-apps',
+                    builder: (context, state) => const BlockedAppsScreen(),
+                  ),
+                ],
               ),
             ],
           ),

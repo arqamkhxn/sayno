@@ -145,6 +145,15 @@ class ProtectionPlatformService {
     return result ?? const {};
   }
 
+  Future<List<Map<String, String>>> getInstalledApps() async {
+    final result = await _methodChannel.invokeListMethod<Map<dynamic, dynamic>>('getInstalledApps');
+    if (result == null) return [];
+    return result.map((e) => {
+      'packageName': e['packageName'] as String,
+      'label': e['label'] as String,
+    }).toList();
+  }
+
   Future<bool> updateVerifiedTime(int epochSeconds) async {
     final result = await _methodChannel.invokeMethod<bool>(
       'updateVerifiedTime',

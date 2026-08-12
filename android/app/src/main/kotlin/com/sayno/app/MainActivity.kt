@@ -236,6 +236,19 @@ class MainActivity : FlutterActivity() {
                         result.error("INVALID_ARGUMENT", "Expected isAuthorized", null)
                     }
                 }
+                "getInstalledApps" -> {
+                    val pm = packageManager
+                    val packages = pm.getInstalledApplications(android.content.pm.PackageManager.GET_META_DATA)
+                    val appList = mutableListOf<Map<String, String>>()
+                    for (app in packages) {
+                        if (pm.getLaunchIntentForPackage(app.packageName) != null) {
+                            val label = pm.getApplicationLabel(app).toString()
+                            val packageName = app.packageName
+                            appList.add(mapOf("packageName" to packageName, "label" to label))
+                        }
+                    }
+                    result.success(appList)
+                }
                 else -> result.notImplemented()
             }
         }
