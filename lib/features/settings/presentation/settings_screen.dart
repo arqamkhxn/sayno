@@ -170,12 +170,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               SettingsTile(
                 title: AppStrings.privacyPolicy,
                 leading: Icons.privacy_tip_outlined,
-                onTap: () {},
+                onTap: () => _showLegalDialog(
+                  context,
+                  'Privacy Policy',
+                  'you have to be more than just a man',
+                ),
               ),
               SettingsTile(
                 title: AppStrings.termsOfService,
                 leading: Icons.description_outlined,
-                onTap: () {},
+                onTap: () => _showLegalDialog(
+                  context,
+                  'Terms of Service',
+                  'the first rule of fight club is, you do not talk about fight club',
+                ),
               ),
             ],
           ),
@@ -209,9 +217,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   title: AppStrings.signOut,
                   leading: Icons.logout_rounded,
                   titleColor: AppColors.warning,
-                  onTap: () {
-                    ref.read(authControllerProvider.notifier).signOut();
-                  },
+                  onTap: () => _showLogoutConfirmationDialog(context, ref),
                 )
               else
                 SettingsTile(
@@ -274,6 +280,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 ref.read(releaseControllerProvider.notifier).initiateRelease(durationSeconds: 86400);
               },
               child: const Text('Start 24-Hour Cooldown'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLegalDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                ref.read(authControllerProvider.notifier).signOut();
+              },
+              child: const Text('Logout', style: TextStyle(color: AppColors.danger)),
             ),
           ],
         );

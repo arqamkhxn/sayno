@@ -114,7 +114,7 @@ class _BlockedAppsScreenState extends ConsumerState<BlockedAppsScreen> {
                         subtitle: Text(packageName, style: AppTextStyles.bodySmall),
                         trailing: Switch.adaptive(
                           value: isBlocked,
-                          activeColor: AppColors.primary,
+                          activeTrackColor: AppColors.accent,
                           onChanged: (value) async {
                             final notifier = ref.read(appLimitsProvider.notifier);
                             if (value) {
