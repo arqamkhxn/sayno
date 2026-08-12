@@ -14,7 +14,6 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../shared/widgets/sayno_button.dart';
 import '../../../shared/widgets/sayno_scaffold.dart';
-import '../../../theme/text_styles.dart';
 import '../../protection/application/protection_controller.dart';
 import '../../protection/domain/protection_status.dart';
 import 'widgets/settings_section.dart';
@@ -87,38 +86,38 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final isProtected = protectionStatus == ProtectionStatus.protected;
 
     return SayNOScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: AppSizes.lg),
-          Text(AppStrings.settingsTitle, style: AppTextStyles.headlineLarge),
-          const SizedBox(height: AppSizes.xxl),
-          SettingsSection(
-            title: AppStrings.sectionProtection,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: AppSizes.md),
+            SettingsSection(
+              title: AppStrings.sectionProtection,
             children: [
-              SettingsTile(
-                title: 'Enable Protection',
-                subtitle: isProtected
-                    ? 'Accessibility protection is enabled'
-                    : 'Accessibility Service is required',
-                leading: Icons.shield_rounded,
-                trailing: protectionStatus.displayLabel,
-                showArrow: false,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(AppSizes.md),
-                child: SayNOButton(
-                  label: 'Open Accessibility Settings',
-                  icon: Icons.open_in_new_rounded,
-                  variant: SayNOButtonVariant.secondary,
-                  onPressed: () async {
-                    _shouldRefreshProtectionOnResume = true;
-                    await ref
-                        .read(protectionControllerProvider.notifier)
-                        .openAccessibilitySettings();
-                  },
+              if (!isProtected) ...[
+                SettingsTile(
+                  title: 'Enable Protection',
+                  subtitle: 'Accessibility Service is required',
+                  leading: Icons.shield_rounded,
+                  trailing: protectionStatus.displayLabel,
+                  showArrow: false,
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(AppSizes.md),
+                  child: SayNOButton(
+                    label: 'Open Accessibility Settings',
+                    icon: Icons.open_in_new_rounded,
+                    variant: SayNOButtonVariant.secondary,
+                    onPressed: () async {
+                      _shouldRefreshProtectionOnResume = true;
+                      await ref
+                          .read(protectionControllerProvider.notifier)
+                          .openAccessibilitySettings();
+                    },
+                  ),
+                ),
+              ],
               SettingsTile(
                 title: AppStrings.blockedApps,
                 subtitle: '3 apps restricted',
@@ -239,8 +238,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           const SizedBox(height: AppSizes.xxl),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _showRequestReleaseDialog(BuildContext context, WidgetRef ref) {
     showDialog(
