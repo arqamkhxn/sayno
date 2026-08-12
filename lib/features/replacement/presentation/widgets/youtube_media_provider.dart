@@ -19,6 +19,7 @@ class _YoutubeMediaProviderState extends State<YoutubeMediaProvider> {
     _controller = YoutubePlayerController.fromVideoId(
       videoId: widget.videoId,
       params: const YoutubePlayerParams(
+        origin: 'https://www.youtube.com',
         showControls: true,
         showFullscreenButton: true,
         strictRelatedVideos: true,
