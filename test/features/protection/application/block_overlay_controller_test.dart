@@ -7,6 +7,9 @@ import 'package:sayno/features/protection/domain/block_reason.dart';
 
 class StubProtectionPlatformService implements ProtectionPlatformService {
   @override
+  Future<List<Map<String, String>>> getInstalledApps() async => [];
+
+  @override
   Future<bool> isClockManipulated() async => false;
 
   @override

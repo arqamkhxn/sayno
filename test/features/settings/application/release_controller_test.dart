@@ -6,7 +6,7 @@ import 'package:sayno/features/protection/application/time_verification_service.
 import 'package:sayno/features/protection/application/notification_service.dart';
 import 'package:sayno/features/protection/data/protection_platform_service.dart';
 import 'package:sayno/features/settings/application/release_controller.dart';
-import 'package:sayno/features/settings/application/partner_controller.dart';
+
 import 'package:sayno/features/settings/domain/partnership.dart';
 import 'package:sayno/features/settings/data/partnership_repository.dart';
 import 'package:sayno/features/settings/data/sqlite_partnership_repository.dart';
@@ -67,6 +67,9 @@ class MockReleaseRepository implements ReleaseRepository {
 }
 
 class MockProtectionPlatformService implements ProtectionPlatformService {
+  @override
+  Future<List<Map<String, String>>> getInstalledApps() async => [];
+
   bool isAuthorized = false;
 
   @override

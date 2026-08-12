@@ -7,7 +7,7 @@ import 'package:sayno/features/contract/data/contract_repository.dart';
 import 'package:sayno/features/contract/application/contract_controller.dart';
 import 'package:sayno/features/protection/data/cloud_sync_service.dart';
 import 'package:sayno/features/protection/data/protection_platform_service.dart';
-import 'package:sayno/features/settings/application/partner_controller.dart';
+
 
 class MockContractRepository implements ContractRepository {
   Contract? activeContract;
@@ -51,6 +51,9 @@ class MockContractRepository implements ContractRepository {
 }
 
 class MockProtectionPlatformService implements ProtectionPlatformService {
+  @override
+  Future<List<Map<String, String>>> getInstalledApps() async => [];
+
   bool setAppLimitSuccess = true;
   final Map<String, int> limits = {};
   final Map<String, String> modes = {};

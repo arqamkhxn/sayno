@@ -49,6 +49,9 @@ class MockSessionRepository implements SessionRepository {
 }
 
 class StubProtectionPlatformService implements ProtectionPlatformService {
+  @override
+  Future<List<Map<String, String>>> getInstalledApps() async => [];
+
   StubProtectionPlatformService(this.repository);
   final MockSessionRepository repository;
 

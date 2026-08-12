@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../core/providers/guest_mode_provider.dart';
 import '../features/contract/application/contract_controller.dart';
 import '../features/contract/presentation/contract_calendar_screen.dart';
 import '../features/contract/presentation/contract_completion_screen.dart';
@@ -42,6 +43,7 @@ class RouterListenable extends ChangeNotifier {
     _ref.listen(activeContractProvider, (_, __) => notifyListeners());
     _ref.listen(authStateProvider, (_, __) => notifyListeners());
     _ref.listen(identityControllerProvider, (_, __) => notifyListeners());
+    _ref.listen(guestModeProvider, (_, __) => notifyListeners());
   }
 }
 
@@ -90,16 +92,23 @@ GoRouter appRouter(Ref ref) {
       final identityStateAsync = ref.read(identityControllerProvider);
       final authState = authStateAsync.value;
       final identityState = identityStateAsync.value;
+      final isGuestMode = ref.read(guestModeProvider);
       
       debugPrint('ROUTER REDIRECT CALLED | '
                  'Current loc: ${state.matchedLocation} | '
                  'AuthState: ${authState?.uid} (isLoading: ${authStateAsync.isLoading}) | '
-                 'IdentityState: ${identityState?.id} (isLoading: ${identityStateAsync.isLoading})');
+                 'IdentityState: ${identityState?.id} (isLoading: ${identityStateAsync.isLoading}) | '
+                 'GuestMode: $isGuestMode');
       
       final isLoginLoc = state.matchedLocation.startsWith('/login');
 
-      // Enforce identity setup for authenticated users
-      if (authState != null) {
+      if (authState == null) {
+        if (!isGuestMode && !isLoginLoc) {
+          debugPrint('ROUTER REDIRECTING | Target: /login | Reason: Unauthenticated and not in guest mode');
+          return '/login';
+        }
+      } else {
+        // Enforce identity setup for authenticated users
         if (identityState == null && !state.uri.path.startsWith('/identity')) {
           debugPrint('ROUTER REDIRECTING | Current: ${state.matchedLocation} | Target: /identity/select | Reason: Authenticated but no identity');
           return '/identity/select';

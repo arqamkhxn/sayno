@@ -12,6 +12,9 @@ import 'package:sayno/features/protection/data/protection_platform_service.dart'
 import 'package:sayno/features/protection/domain/block_reason.dart';
 
 class MockProtectionPlatformService implements ProtectionPlatformService {
+  @override
+  Future<List<Map<String, String>>> getInstalledApps() async => [];
+
   bool isAccessibilityEnabledResult = true;
   bool isScreenOnResult = true;
   bool isDeviceLockedResult = false;

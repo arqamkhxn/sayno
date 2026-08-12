@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../core/providers/guest_mode_provider.dart';
 import '../application/auth_controller.dart';
 import '../application/auth_exception_handler.dart';
 
@@ -221,6 +222,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 _buildGoogleButton(isLoading),
                 const SizedBox(height: AppSizes.xxl),
                 _buildFooterToggle(isLogin),
+                const SizedBox(height: AppSizes.lg),
+                _buildGuestButton(),
                 const SizedBox(height: AppSizes.xl),
               ],
             ),
@@ -654,6 +657,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildGuestButton() {
+    return GestureDetector(
+      onTap: () {
+        ref.read(guestModeProvider.notifier).setGuestMode(true);
+      },
+      child: Center(
+        child: Text(
+          'Continue as Guest',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ),
     );
   }
 }

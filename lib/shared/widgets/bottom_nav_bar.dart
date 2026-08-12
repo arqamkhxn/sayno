@@ -5,18 +5,30 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../navigation/nav_destinations.dart';
 import '../../theme/text_styles.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/providers/guest_mode_provider.dart';
+import '../../features/auth/application/auth_controller.dart';
+import '../../features/auth/presentation/widgets/guest_login_banner.dart';
 
 /// Root scaffold that wraps all tab screens with the bottom navigation bar.
-class AppScaffoldWithNav extends StatelessWidget {
+class AppScaffoldWithNav extends ConsumerWidget {
   const AppScaffoldWithNav({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isGuestMode = ref.watch(guestModeProvider);
+    final authState = ref.watch(authStateProvider).value;
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: navigationShell,
+      body: Column(
+        children: [
+          if (isGuestMode && authState == null) const GuestLoginBanner(),
+          Expanded(child: navigationShell),
+        ],
+      ),
       bottomNavigationBar: SayNOBottomNav(
         currentIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) {

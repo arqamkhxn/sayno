@@ -27,6 +27,9 @@ class MockLimitRepository implements LimitRepository {
 }
 
 class StubProtectionPlatformService implements ProtectionPlatformService {
+  @override
+  Future<List<Map<String, String>>> getInstalledApps() async => [];
+
   final List<String> setLimitCalls = [];
   final List<String> removeLimitCalls = [];
 
