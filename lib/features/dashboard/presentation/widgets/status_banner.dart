@@ -8,9 +8,10 @@ import '../../../protection/domain/protection_status.dart';
 
 /// Full-width status banner indicating protection state.
 class StatusBanner extends StatelessWidget {
-  const StatusBanner({required this.status, super.key});
+  const StatusBanner({required this.status, this.onTap, super.key});
 
   final ProtectionStatus status;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -35,34 +36,38 @@ class StatusBanner extends StatelessWidget {
       ProtectionStatus.unknown => '...',
     };
 
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: AppSizes.iconMd),
-          const SizedBox(width: AppSizes.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  status.displayLabel,
-                  style: AppTextStyles.titleMedium.copyWith(color: color),
-                ),
-                Text(message, style: AppTextStyles.bodySmall),
-              ],
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+      child: Container(
+        padding: const EdgeInsets.all(AppSizes.md),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: AppSizes.iconMd),
+            const SizedBox(width: AppSizes.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    status.displayLabel,
+                    style: AppTextStyles.titleMedium.copyWith(color: color),
+                  ),
+                  Text(message, style: AppTextStyles.bodySmall),
+                ],
+              ),
             ),
-          ),
-          SayNOChip(
-            label: chipLabel,
-            color: color,
-          ),
-        ],
+            SayNOChip(
+              label: chipLabel,
+              color: color,
+            ),
+          ],
+        ),
       ),
     );
   }

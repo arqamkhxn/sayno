@@ -21,8 +21,8 @@ import 'widgets/streak_card.dart';
 import 'package:go_router/go_router.dart';
 import '../../contract/application/contract_controller.dart';
 import '../../contract/domain/contract.dart';
-import '../../contract/domain/contract_app.dart';
 import '../../protection/domain/monitored_apps.dart';
+import '../../auth/application/auth_controller.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -37,35 +37,64 @@ class DashboardScreen extends ConsumerWidget {
     final sessionCount = ref.watch(sessionCountProvider);
     final todayTotalUsage = ref.watch(todayTotalUsageProvider);
     final activeContractAsync = ref.watch(activeContractProvider);
+    final activeContract = activeContractAsync.value;
+
+    int totalLimitMinutes = 0;
+    if (activeContract != null) {
+      for (final app in activeContract.apps) {
+        totalLimitMinutes += app.dailyLimit.inMinutes;
+      }
+    } else {
+      final phase2Limits = ref.watch(appLimitsProvider).value ?? const {};
+      for (final limit in phase2Limits.values) {
+        totalLimitMinutes += limit.inMinutes;
+      }
+    }
+
+    final totalUsedMinutes = todayTotalUsage.inMinutes;
+    final int focusScore = (totalLimitMinutes == 0) 
+        ? 100 
+        : (100 - ((totalUsedMinutes / totalLimitMinutes) * 100)).clamp(0, 100).toInt();
  
     return SayNOScaffold(
       scrollable: false,
       padding: EdgeInsets.zero,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.screenPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: AppSizes.lg),
-            _DashboardHeader(),
-            const SizedBox(height: AppSizes.lg),
-            StatusBanner(status: protectionStatus),
-            const SizedBox(height: AppSizes.md),
-            const _ActiveAppStatusCard(),
-            const SizedBox(height: AppSizes.md),
-            const StreakCard(streakDays: 7),
-            const SizedBox(height: AppSizes.md),
-            DailyLimitCard(usedMinutes: todayTotalUsage.inMinutes, limitMinutes: 120),
-            const SizedBox(height: AppSizes.lg),
-            const SayNOSectionHeader(title: 'Today'),
-            const SizedBox(height: AppSizes.md),
-            QuickStatsRow(
-              blockedToday: 3,
-              sessionCount: sessionCount,
-              focusScore: 82,
-            ),
-            const SizedBox(height: AppSizes.lg),
-            const SayNOSectionHeader(title: AppStrings.contractLabel),
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.screenPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: AppSizes.lg),
+              const _DashboardHeader(),
+              const SizedBox(height: AppSizes.lg),
+              if (protectionStatus != ProtectionStatus.protected) ...[
+                StatusBanner(
+                  status: protectionStatus,
+                  onTap: () {
+                    if (protectionStatus == ProtectionStatus.protectionRequired) {
+                      ref.read(protectionPlatformServiceProvider).openAccessibilitySettings();
+                    }
+                  },
+                ),
+                const SizedBox(height: AppSizes.md),
+              ],
+              const _ActiveAppStatusCard(),
+              const SizedBox(height: AppSizes.md),
+              StreakCard(streakDays: activeContract?.currentStreak ?? 0),
+              const SizedBox(height: AppSizes.md),
+              DailyLimitCard(usedMinutes: totalUsedMinutes, limitMinutes: totalLimitMinutes),
+              const SizedBox(height: AppSizes.lg),
+              const SayNOSectionHeader(title: 'Today'),
+              const SizedBox(height: AppSizes.md),
+              QuickStatsRow(
+                blockedToday: 0,
+                sessionCount: sessionCount,
+                focusScore: focusScore,
+              ),
+              const SizedBox(height: AppSizes.lg),
+              const SayNOSectionHeader(title: AppStrings.contractLabel),
             const SizedBox(height: AppSizes.md),
             activeContractAsync.when(
               data: (contract) {
@@ -86,13 +115,34 @@ class DashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
  
-class _DashboardHeader extends StatelessWidget {
+class _DashboardHeader extends ConsumerWidget {
+  const _DashboardHeader();
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final username = ref.watch(usernameProvider).value;
+    final session = ref.watch(authStateProvider).value;
+    
+    final displayLabel = username != null && username.isNotEmpty 
+        ? '@$username' 
+        : session?.displayName ?? 'SayNO User';
+        
+    final initial = displayLabel.isNotEmpty 
+        ? (displayLabel.startsWith('@') ? displayLabel[1].toUpperCase() : displayLabel[0].toUpperCase())
+        : 'U';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -100,12 +150,12 @@ class _DashboardHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Good morning',
+              _getGreeting(),
               style: AppTextStyles.bodyMedium.copyWith(
                 color: const Color(0xFF9CA3AF),
               ),
             ),
-            Text(AppStrings.dashboardTitle, style: AppTextStyles.headlineLarge),
+            Text(displayLabel, style: AppTextStyles.headlineLarge),
           ],
         ),
         Container(
@@ -116,10 +166,13 @@ class _DashboardHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.radiusMd),
             border: Border.all(color: const Color(0xFF222222), width: 1),
           ),
-          child: const Icon(
-            Icons.notifications_none_rounded,
-            size: AppSizes.iconMd,
-            color: Color(0xFF9CA3AF),
+          alignment: Alignment.center,
+          child: Text(
+            initial,
+            style: AppTextStyles.titleMedium.copyWith(
+              color: const Color(0xFF9CA3AF),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

@@ -62,7 +62,7 @@ class AppUsageTile extends StatelessWidget {
                         Text(
                           limit != null && limit > 0
                               ? '${_fmt(usedMinutes)} / ${_fmt(limit)}'
-                              : '${_fmt(usedMinutes)} / No Limit',
+                              : '${_fmt(usedMinutes)} / Unlimited',
                           style: AppTextStyles.labelMedium,
                         ),
                       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../shared/widgets/sayno_card.dart';
@@ -44,43 +45,42 @@ class HealthScreen extends ConsumerWidget {
     final appLimitsAsync = ref.watch(appLimitsProvider);
     final appLimits = appLimitsAsync.value ?? const {};
 
-    // Determine package names to show (popular defaults + any active usage packages)
-    final displayedPackages = <String>{
-      'com.instagram.android',
-      'com.google.android.youtube',
-      'com.android.chrome',
-      ...todayUsage.keys,
-    }.toList();
+    // Determine packages to show: only apps with usage > 0 or configured limit
+    final allPackages = <String>{...appLimits.keys, ...todayUsage.keys}.toList();
+    final displayedPackages = allPackages.where((package) {
+      final usedMinutes = todayUsage[package]?.inMinutes ?? 0;
+      final limitMinutes = appLimits[package]?.inMinutes;
+      return usedMinutes > 0 || limitMinutes != null;
+    }).toList();
+
+    // Sort descending by usage
+    displayedPackages.sort((a, b) {
+      final usageA = todayUsage[a]?.inMinutes ?? 0;
+      final usageB = todayUsage[b]?.inMinutes ?? 0;
+      return usageB.compareTo(usageA);
+    });
 
     final weeklyDataAsync = ref.watch(weeklyUsageProvider);
     final summaryDataAsync = ref.watch(weeklySummaryProvider);
 
     return SayNOScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: AppSizes.lg),
-          Text(AppStrings.healthTitle, style: AppTextStyles.headlineLarge),
-          const SizedBox(height: AppSizes.xs),
-          Text(
-            'Your digital usage at a glance.',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: const Color(0xFF9CA3AF),
-            ),
-          ),
-          const SizedBox(height: AppSizes.lg),
-          
-          summaryDataAsync.when(
-            data: (summary) => WeeklySummaryCard(
-              totalHours: summary.totalHours,
-              dailyAvgMinutes: summary.dailyAvgMinutes,
-              bestDayLabel: summary.bestDayLabel,
-              improvementPercent: 0, // Requires more historical context to calculate accurately
-            ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => const Center(child: Text('Unable to load stats')),
-          ),
-          const SizedBox(height: AppSizes.md),
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: AppSizes.md),
+              summaryDataAsync.when(
+                data: (summary) => WeeklySummaryCard(
+                  totalHours: summary.totalHours,
+                  dailyAvgMinutes: summary.dailyAvgMinutes,
+                  bestDayLabel: summary.bestDayLabel,
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => const Center(child: Text('Unable to load stats')),
+              ),
+              const SizedBox(height: AppSizes.md),
           
           weeklyDataAsync.when(
             data: (weeklyData) {
@@ -97,32 +97,44 @@ class HealthScreen extends ConsumerWidget {
           const SayNOSectionHeader(title: AppStrings.appUsage),
           const SizedBox(height: AppSizes.md),
           SayNOCard(
-            child: Column(
-              children: [
-                for (int i = 0; i < displayedPackages.length; i++) ...[
-                  if (i > 0) const Divider(),
-                  Builder(
-                    builder: (context) {
-                      final package = displayedPackages[i];
-                      final appName = monitoredAppsRegistry[package] ?? 'Unknown App';
-                      final usedMinutes = todayUsage[package]?.inMinutes ?? 0;
-                      final limitMinutes = appLimits[package]?.inMinutes;
+            child: displayedPackages.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(AppSizes.md),
+                    child: Center(
+                      child: Text(
+                        'No app usage tracked today',
+                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                      ),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      for (int i = 0; i < displayedPackages.length; i++) ...[
+                        if (i > 0) const Divider(),
+                        Builder(
+                          builder: (context) {
+                            final package = displayedPackages[i];
+                            final appName = monitoredAppsRegistry[package] ?? 'Unknown App';
+                            final usedMinutes = todayUsage[package]?.inMinutes ?? 0;
+                            final limitMinutes = appLimits[package]?.inMinutes;
 
-                      return AppUsageTile(
-                        appName: appName,
-                        usedMinutes: usedMinutes,
-                        limitMinutes: limitMinutes,
-                        icon: _getIconForPackage(package),
-                      );
-                    },
+                            return AppUsageTile(
+                              appName: appName,
+                              usedMinutes: usedMinutes,
+                              limitMinutes: limitMinutes,
+                              icon: _getIconForPackage(package),
+                            );
+                          },
+                        ),
+                      ],
+                    ],
                   ),
-                ],
-              ],
-            ),
           ),
           const SizedBox(height: AppSizes.xxl),
         ],
       ),
-    );
+    ),
+  ),
+);
   }
 }

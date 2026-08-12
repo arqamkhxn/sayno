@@ -19,7 +19,7 @@ class DailyLimitCard extends StatelessWidget {
   final int limitMinutes;
 
   double get _progress =>
-      (usedMinutes / limitMinutes).clamp(0.0, 1.0);
+      limitMinutes == 0 ? 0.0 : (usedMinutes / limitMinutes).clamp(0.0, 1.0);
 
   int get _remainingMinutes => (limitMinutes - usedMinutes).clamp(0, limitMinutes);
 

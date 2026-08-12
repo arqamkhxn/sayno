@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,21 @@ const String _kApiBaseUrl = String.fromEnvironment(
 
 final authStateProvider = StreamProvider<UserSession?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges;
+});
+
+final usernameProvider = StreamProvider<String?>((ref) {
+  final session = ref.watch(authStateProvider).value;
+  if (session == null) return Stream.value(null);
+  
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(session.uid)
+      .snapshots()
+      .map((doc) {
+        if (!doc.exists) return null;
+        final data = doc.data();
+        return data?['username'] as String?;
+      });
 });
 
 final authControllerProvider = StateNotifierProvider<AuthController, AsyncValue<void>>((ref) {

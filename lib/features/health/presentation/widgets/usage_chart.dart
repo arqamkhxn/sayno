@@ -26,7 +26,23 @@ class UsageChart extends StatelessWidget {
         children: [
           Text('Weekly Usage', style: AppTextStyles.titleMedium),
           const SizedBox(height: AppSizes.lg),
-          SizedBox(
+          if (weeklyData.every((val) => val == 0.0))
+            SizedBox(
+              height: 160,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.bar_chart_rounded, color: AppColors.textSecondary, size: 48),
+                    const SizedBox(height: AppSizes.sm),
+                    Text('No usage logged yet', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                  ],
+                ),
+              ),
+            )
+          else
+            SizedBox(
+
             height: 160,
             child: BarChart(
               BarChartData(

@@ -12,14 +12,12 @@ class WeeklySummaryCard extends StatelessWidget {
     required this.totalHours,
     required this.dailyAvgMinutes,
     required this.bestDayLabel,
-    required this.improvementPercent,
     super.key,
   });
 
   final double totalHours;
   final int dailyAvgMinutes;
   final String bestDayLabel;
-  final int improvementPercent;
 
   String _fmtAvg(int m) {
     final h = m ~/ 60;
@@ -47,15 +45,6 @@ class WeeklySummaryCard extends StatelessWidget {
                 child: SayNOStatTile(
                   label: 'Daily Avg',
                   value: _fmtAvg(dailyAvgMinutes),
-                ),
-              ),
-              Expanded(
-                child: SayNOStatTile(
-                  label: 'vs Last Wk',
-                  value: improvementPercent == 0 ? 'N/A' : '${improvementPercent > 0 ? '-' : '+'}${improvementPercent.abs()}%',
-                  valueColor: improvementPercent > 0
-                      ? AppColors.success
-                      : (improvementPercent == 0 ? AppColors.textSecondary : AppColors.danger),
                 ),
               ),
             ],
