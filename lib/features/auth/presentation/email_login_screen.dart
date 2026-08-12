@@ -7,6 +7,7 @@ import '../../../shared/widgets/sayno_button.dart';
 import '../../../shared/widgets/sayno_scaffold.dart';
 import '../../../theme/text_styles.dart';
 import '../application/auth_controller.dart';
+import '../application/auth_exception_handler.dart';
 
 class EmailLoginScreen extends ConsumerStatefulWidget {
   const EmailLoginScreen({super.key});
@@ -41,7 +42,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     ref.listen(authControllerProvider, (prev, next) {
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${next.error}')),
+          SnackBar(content: Text(AuthExceptionHandler.handleException(next.error))),
         );
       }
     });

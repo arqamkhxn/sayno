@@ -20,6 +20,10 @@ class AuthService {
     await _repository.signInWithEmail(email, password);
   }
 
+  Future<void> signUpWithEmail(String email, String password) async {
+    await _repository.signUpWithEmail(email, password);
+  }
+
   Future<void> signInWithPhone({
     required String phoneNumber,
     required void Function(String verificationId, int? resendToken) codeSent,

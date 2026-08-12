@@ -38,4 +38,10 @@ class IdentityController extends AsyncNotifier<IdentityConfiguration?> {
     await repo.saveConfiguration(newConfig);
     state = AsyncData(newConfig);
   }
+
+  Future<void> clearIdentity() async {
+    final repo = ref.read(identityRepositoryProvider);
+    await repo.clearAll();
+    state = const AsyncData(null);
+  }
 }

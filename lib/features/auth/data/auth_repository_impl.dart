@@ -32,5 +32,9 @@ class AuthRepositoryImpl implements AuthRepository {
       _provider.signInWithEmail(email, password);
 
   @override
+  Future<void> signUpWithEmail(String email, String password) => 
+      _provider.signUpWithEmail(email, password);
+
+  @override
   Future<void> signOut() => _provider.signOut();
 }

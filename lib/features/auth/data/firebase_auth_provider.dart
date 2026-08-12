@@ -82,6 +82,17 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
+  Future<void> signUpWithEmail(String email, String password) async {
+    try {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _createUserInFirestoreIfNeeded(userCredential.user);
+    } catch (e) {
+      debugPrint('Auth Error: Email Sign-Up failed: $e');
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();

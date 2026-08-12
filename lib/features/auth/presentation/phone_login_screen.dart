@@ -7,6 +7,7 @@ import '../../../shared/widgets/sayno_button.dart';
 import '../../../shared/widgets/sayno_scaffold.dart';
 import '../../../theme/text_styles.dart';
 import '../application/auth_service.dart';
+import '../application/auth_exception_handler.dart';
 
 class PhoneLoginScreen extends ConsumerStatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -63,7 +64,7 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(AuthExceptionHandler.handleException(e))),
       );
     }
   }
@@ -82,7 +83,7 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid code: $e')),
+        SnackBar(content: Text(AuthExceptionHandler.handleException(e))),
       );
     }
   }

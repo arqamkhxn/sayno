@@ -68,4 +68,9 @@ class LocalIdentityDataSource {
       });
     });
   }
+
+  Future<void> clearAllData() async {
+    final db = await database;
+    await db.delete('identity_history');
+  }
 }
