@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -128,8 +127,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     if (isLogin) {
       ref.read(authControllerProvider.notifier).signInWithEmail(email, password);
     } else {
-      ref.read(authControllerProvider.notifier).signUpWithEmail(email, password);
+      _signUpAndClaim(email, password);
     }
+  }
+
+  /// Two-step sign-up flow:
+  ///   1. Create the Firebase account.
+  ///   2. If a username was entered (and is available), claim it.
+  Future<void> _signUpAndClaim(String email, String password) async {
+    await ref.read(authControllerProvider.notifier).signUpWithEmail(email, password);
+
+    // Only attempt claim if account creation succeeded and a handle was entered
+    final handle = ref.read(pendingUsernameProvider);
+    final status = ref.read(_usernameStatusProvider);
+    if (handle.isEmpty || status != UsernameStatus.available) return;
+
+    final result = await ref
+        .read(authControllerProvider.notifier)
+        .claimUsername(handle);
+
+    if (!mounted) return;
+
+    final message = switch (result) {
+      UsernameClaimResult.success => '@$handle is yours!',
+      UsernameClaimResult.handleTaken => '@$handle was just taken. You can set it later in Settings.',
+      UsernameClaimResult.invalidHandle => 'Username format is invalid. You can set it later in Settings.',
+      UsernameClaimResult.alreadyHasUsername => 'You already have a username.',
+      UsernameClaimResult.networkError => 'Username could not be saved. You can set it later in Settings.',
+    };
+    final isSuccess = result == UsernameClaimResult.success;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isSuccess ? AppColors.success : AppColors.warning,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        ),
+      ),
+    );
   }
 
   @override
