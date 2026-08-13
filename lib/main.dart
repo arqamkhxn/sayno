@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/providers/shared_prefs_provider.dart';
 import 'firebase_options.dart';
 import 'app.dart';
 import 'features/protection/application/time_verification_service.dart';
@@ -13,6 +15,7 @@ import 'features/protection/application/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -43,6 +46,7 @@ void main() async {
   final container = ProviderContainer(
     overrides: [
       firebaseInitializedProvider.overrideWithValue(isFirebaseInitialized),
+      sharedPreferencesProvider.overrideWithValue(prefs),
     ],
   );
 
